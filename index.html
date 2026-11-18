@@ -119,13 +119,16 @@
     .section-heading p { margin-top: .65rem; }
     .assistant-section { padding-top: clamp(2.2rem, 5vw, 4rem); }
     .assistant-panel { padding: clamp(.65rem, 2vw, 1.2rem); border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--paper); box-shadow: var(--shadow); }
+    .assistant-safety-note { margin: 0 .45rem 1rem; padding: .9rem 1rem; border: 1px solid var(--line); border-left: 4px solid var(--red-700); border-radius: 12px; background: var(--rose-50); color: var(--muted); font-size: .88rem; }
+    .assistant-safety-note strong { color: var(--wine-900); }
+    .assistant-safety-note a, .sources-grid a { color: var(--wine-800); font-weight: 700; text-underline-offset: .15em; }
     .assistant-topbar { display: flex; align-items: center; gap: .8rem; padding: .55rem .45rem 1rem; }
     .assistant-icon { display: grid; place-items: center; width: 40px; height: 40px; flex: 0 0 auto; border-radius: 13px; color: var(--white); background: var(--wine-800); }
     .assistant-icon svg { width: 21px; height: 21px; }
     .assistant-name { color: var(--wine-950); font-size: .98rem; font-weight: 800; }
     .assistant-status { display: flex; align-items: center; gap: .4rem; color: var(--muted); font-size: .78rem; }
     .assistant-status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #a5414f; }
-    iframe { display: block; width: 100%; height: min(75vh, 560px); min-height: 460px; border: 1px solid #f0e1e2; border-radius: 15px; background: #fff; }
+    iframe { display: block; width: 100%; height: min(75vh, 560px); min-height: 460px; border: 1px solid rgba(100, 27, 45, .2); border-radius: 15px; background: #fff; box-shadow: 0 8px 24px rgba(100, 27, 45, .06); }
 
     .steps-section { background: linear-gradient(180deg, rgba(248,233,233,.5), rgba(255,247,246,0)); }
     .steps-grid, .sources-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; padding: 0; list-style: none; }
@@ -202,7 +205,7 @@
         <div>
           <p class="eyebrow">Health information • Student project</p>
           <h1>Is this health claim <span>reliable?</span></h1>
-          <p class="hero-copy">Every day we see articles, images and videos claiming that a drink cures a disease or a medicine is dangerous. Ask the assistant before you believe or share.</p>
+          <p class="hero-copy">Every day we see articles, images and videos claiming that a drink cures a disease or a medicine is dangerous. Use the assistant to examine the evidence, then check its sources before deciding what to believe or share.</p>
           <div class="hero-actions">
             <a class="button button-primary" href="#checker">Check a claim <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M10 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
             <a class="button button-secondary" href="#how-it-works">How it works</a>
@@ -233,6 +236,7 @@
           <span class="assistant-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.8A2.8 2.8 0 0 1 6.8 3h10.4A2.8 2.8 0 0 1 20 5.8v7.4a2.8 2.8 0 0 1-2.8 2.8h-5.5L7 20v-4H6.8A2.8 2.8 0 0 1 4 13.2V5.8Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8 8h8M8 11.5h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
           <div><div class="assistant-name">Health Information Checker</div><div class="assistant-status">Assistant chat</div></div>
         </div>
+        <p class="assistant-safety-note"><strong>Important:</strong> This experimental assistant can be wrong, out of date, or unable to assess a claim. It provides general information only—not a diagnosis or personal treatment or medication advice. Check its citations and speak with a qualified health professional about personal decisions. Please do not enter identifying health details. For an emergency, contact local emergency services.</p>
         <iframe title="AI assistant chat" src="https://vdk-viber-runtime-prod.bot.botpress.host/edge/?botId=9ff0fe8b-3844-43d6-9743-9b6e29028f56" loading="lazy" allow="clipboard-write"></iframe>
       </div>
     </section>
@@ -257,9 +261,9 @@
         <h2>Our sources</h2>
       </div>
       <ul class="sources-grid">
-        <li><span class="source-mark" aria-hidden="true">WHO</span><h3>World Health Organization (WHO)</h3><p>Public health.</p></li>
-        <li><span class="source-mark" aria-hidden="true">UN</span><h3>UNICEF</h3><p>Child and family health.</p></li>
-        <li><span class="source-mark" aria-hidden="true">FDA</span><h3>U.S. Food and Drug Administration (FDA)</h3><p>Medicines and food.</p></li>
+        <li><span class="source-mark" aria-hidden="true">WHO</span><h3><a href="https://www.who.int/health-topics" target="_blank" rel="noopener noreferrer">World Health Organization (WHO)</a></h3><p>Global health topics and guidance.</p></li>
+        <li><span class="source-mark" aria-hidden="true">UN</span><h3><a href="https://www.unicef.org/health" target="_blank" rel="noopener noreferrer">UNICEF</a></h3><p>Child, adolescent, and maternal health resources.</p></li>
+        <li><span class="source-mark" aria-hidden="true">FDA</span><h3><a href="https://www.fda.gov/drugs" target="_blank" rel="noopener noreferrer">U.S. Food and Drug Administration (FDA)</a></h3><p>U.S. drug information, approvals, and safety updates.</p></li>
       </ul>
     </section>
 
