@@ -1,72 +1,276 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Health Information Checker</title>
-<meta name="description" content="A student prototype that helps you check health claims.">
-<style>
-:root{--bg:#F5F8FD;--ink:#1B2433;--blue:#1556B8;--sky:#E6EFFC;--line:#C9D6EA}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:1.0625rem/1.7 system-ui,"Segoe UI",Roboto,Arial,sans-serif}
-h1,h2,h3,p,ol,ul{margin:0}
-h1{font-size:clamp(1.7rem,4.5vw,2.5rem);line-height:1.3;margin-bottom:.75rem}
-h2{margin-bottom:1rem}
-.wrap{width:min(960px,100% - 2rem);margin-inline:auto}
-header{background:#fff;border-bottom:2px solid var(--blue)}
-.brand{display:flex;align-items:center;gap:.6rem;padding-block:.75rem;font-weight:700;font-size:1.15rem;color:var(--blue)}
-section{padding-block:2rem}
-.card{background:#fff;border:2px solid var(--line);border-radius:14px;padding:1rem}
-iframe{display:block;width:100%;height:min(75vh,540px);border:0;border-radius:10px}
-ul,ol{display:grid;gap:1rem;padding:0;list-style:none}
-li{background:#fff;border:2px solid var(--line);border-radius:12px;padding:1rem}
-li p{color:#4A5568}
-@media(min-width:720px){ul,ol{grid-template-columns:repeat(3,1fr)}}
-footer{background:var(--blue);color:#fff;padding-block:1rem;text-align:center}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#641b2d">
+  <title>Health Information Checker</title>
+  <meta name="description" content="A student prototype that helps you check health claims.">
+  <style>
+    :root {
+      color-scheme: light;
+      --wine-950: #35101d;
+      --wine-900: #451426;
+      --wine-800: #641b2d;
+      --wine-700: #7e2035;
+      --red-700: #b52e43;
+      --red-600: #cc4051;
+      --rose-100: #f8e9e9;
+      --rose-50: #fff7f6;
+      --paper: #fffdfc;
+      --ink: #291a1e;
+      --muted: #6c5960;
+      --line: #ead6d8;
+      --white: #fff;
+      --shadow: 0 22px 60px rgba(69, 20, 38, .10);
+      --soft-shadow: 0 12px 32px rgba(69, 20, 38, .08);
+      --radius-lg: 24px;
+      --radius-md: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--rose-50);
+      color: var(--ink);
+      font: 1rem/1.7 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+    h1, h2, h3, p, ol, ul { margin: 0; }
+    h1, h2, h3 { color: var(--wine-950); letter-spacing: -.025em; }
+    h1 { font-size: clamp(2.35rem, 6vw, 4.35rem); line-height: 1.08; max-width: 12ch; }
+    h2 { font-size: clamp(1.65rem, 3.5vw, 2.35rem); line-height: 1.2; }
+    h3 { font-size: 1.1rem; line-height: 1.35; }
+    p { color: var(--muted); }
+    .wrap { width: min(1120px, 100% - 2.5rem); margin-inline: auto; }
+    .skip-link {
+      position: absolute; left: 1rem; top: -5rem; z-index: 10;
+      padding: .7rem 1rem; border-radius: 10px; background: var(--wine-950); color: var(--white);
+    }
+    .skip-link:focus { top: 1rem; }
+
+    .site-header {
+      position: relative;
+      z-index: 2;
+      border-bottom: 1px solid rgba(100, 27, 45, .1);
+      background: rgba(255, 253, 252, .92);
+    }
+    .header-inner { min-height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
+    .brand { display: inline-flex; align-items: center; gap: .8rem; color: var(--wine-900); font-weight: 750; font-size: 1.02rem; text-decoration: none; }
+    .brand-mark {
+      width: 42px; height: 42px; display: grid; place-items: center; flex: 0 0 auto;
+      border-radius: 14px; color: var(--white); background: linear-gradient(145deg, var(--red-600), var(--wine-800));
+      box-shadow: 0 7px 16px rgba(126, 32, 53, .22);
+    }
+    .brand-mark svg { width: 23px; height: 23px; }
+    .nav-links { display: flex; align-items: center; gap: clamp(.8rem, 2.7vw, 2rem); }
+    .nav-links a { color: var(--muted); font-weight: 650; font-size: .9rem; text-decoration: none; transition: color .18s ease; }
+    .nav-links a:hover, .nav-links a:focus-visible { color: var(--red-700); }
+    .nav-links .nav-cta { color: var(--white); background: var(--wine-800); padding: .58rem 1rem; border-radius: 999px; }
+    .nav-links .nav-cta:hover, .nav-links .nav-cta:focus-visible { color: var(--white); background: var(--red-700); }
+
+    .hero {
+      position: relative; overflow: hidden; padding-block: clamp(4rem, 8vw, 7.5rem);
+      background:
+        radial-gradient(ellipse at 85% 18%, rgba(204, 64, 81, .12), transparent 32%),
+        linear-gradient(180deg, var(--paper), var(--rose-50));
+    }
+    .hero::after {
+      content: ""; position: absolute; width: 390px; height: 390px; right: -220px; bottom: -250px;
+      border: 1px solid rgba(181, 46, 67, .13); border-radius: 50%; box-shadow: 0 0 0 36px rgba(181, 46, 67, .035), 0 0 0 72px rgba(181, 46, 67, .025);
+      pointer-events: none;
+    }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr); align-items: center; gap: clamp(2.5rem, 7vw, 6rem); }
+    .eyebrow { display: inline-flex; align-items: center; gap: .55rem; margin-bottom: 1.25rem; color: var(--red-700); font-size: .76rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .eyebrow::before { content: ""; width: 25px; height: 2px; background: var(--red-600); border-radius: 2px; }
+    .hero h1 span { color: var(--red-700); }
+    .hero-copy { max-width: 600px; margin-top: 1.35rem; font-size: clamp(1rem, 1.6vw, 1.12rem); }
+    .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .85rem; margin-top: 1.8rem; }
+    .button { min-height: 48px; display: inline-flex; justify-content: center; align-items: center; gap: .6rem; border: 1px solid transparent; border-radius: 999px; padding: .7rem 1.25rem; font-weight: 750; text-decoration: none; transition: transform .18s ease, background .18s ease, box-shadow .18s ease; }
+    .button:hover { transform: translateY(-2px); }
+    .button-primary { color: var(--white); background: var(--wine-800); box-shadow: 0 8px 18px rgba(100, 27, 45, .2); }
+    .button-primary:hover { background: var(--red-700); box-shadow: 0 10px 22px rgba(100, 27, 45, .23); }
+    .button-secondary { color: var(--wine-800); border-color: var(--line); background: var(--paper); }
+    .button-secondary:hover { background: var(--rose-100); }
+    .button svg { width: 16px; height: 16px; }
+
+    .hero-art { position: relative; min-height: 325px; display: grid; place-items: center; }
+    .art-halo { position: absolute; width: min(100%, 350px); aspect-ratio: 1; border: 1px solid rgba(181, 46, 67, .16); border-radius: 50%; box-shadow: 0 0 0 24px rgba(181, 46, 67, .035), 0 0 0 48px rgba(181, 46, 67, .025); }
+    .check-card { position: relative; width: min(100%, 350px); padding: 1.6rem; border: 1px solid rgba(255,255,255,.72); border-radius: var(--radius-lg); background: rgba(255,253,252,.92); box-shadow: var(--shadow); transform: rotate(-2deg); }
+    .check-card-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-bottom: 1.2rem; border-bottom: 1px solid var(--line); }
+    .check-card-label { color: var(--muted); font-size: .75rem; font-weight: 750; letter-spacing: .12em; text-transform: uppercase; }
+    .dots { display: flex; gap: 5px; }
+    .dots i { width: 7px; height: 7px; display: block; border-radius: 50%; background: #d8b3b8; }
+    .dots i:first-child { background: var(--red-600); }
+    .check-illustration { display: grid; place-items: center; width: 82px; height: 82px; margin: 1.45rem auto 1rem; border-radius: 50%; color: var(--white); background: linear-gradient(145deg, var(--red-600), var(--wine-800)); box-shadow: 0 0 0 11px var(--rose-100); }
+    .check-illustration svg { width: 39px; height: 39px; }
+    .check-card-title { text-align: center; color: var(--wine-950); font-size: 1.25rem; font-weight: 800; }
+    .check-card-note { margin-top: .2rem; text-align: center; font-size: .9rem; }
+    .mini-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: .55rem; margin-top: 1.4rem; }
+    .mini-step { padding: .6rem .35rem; border-radius: 11px; background: var(--rose-50); text-align: center; color: var(--wine-800); font-size: .69rem; font-weight: 750; }
+    .mini-step b { display: block; margin: 0 auto .3rem; width: 21px; height: 21px; border-radius: 50%; color: var(--white); background: var(--red-700); line-height: 21px; font-size: .7rem; }
+    .floating-seal { position: absolute; right: -4%; top: 9%; display: grid; place-items: center; width: 58px; height: 58px; border: 5px solid var(--rose-50); border-radius: 19px; color: var(--wine-800); background: #f5d8d9; box-shadow: var(--soft-shadow); transform: rotate(9deg); }
+    .floating-seal svg { width: 28px; height: 28px; }
+
+    .content-section { padding-block: clamp(3.5rem, 7vw, 6rem); }
+    .section-heading { max-width: 680px; margin-bottom: 1.7rem; }
+    .section-heading p { margin-top: .65rem; }
+    .assistant-section { padding-top: clamp(2.2rem, 5vw, 4rem); }
+    .assistant-panel { padding: clamp(.65rem, 2vw, 1.2rem); border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--paper); box-shadow: var(--shadow); }
+    .assistant-topbar { display: flex; align-items: center; gap: .8rem; padding: .55rem .45rem 1rem; }
+    .assistant-icon { display: grid; place-items: center; width: 40px; height: 40px; flex: 0 0 auto; border-radius: 13px; color: var(--white); background: var(--wine-800); }
+    .assistant-icon svg { width: 21px; height: 21px; }
+    .assistant-name { color: var(--wine-950); font-size: .98rem; font-weight: 800; }
+    .assistant-status { display: flex; align-items: center; gap: .4rem; color: var(--muted); font-size: .78rem; }
+    .assistant-status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #a5414f; }
+    iframe { display: block; width: 100%; height: min(75vh, 560px); min-height: 460px; border: 1px solid #f0e1e2; border-radius: 15px; background: #fff; }
+
+    .steps-section { background: linear-gradient(180deg, rgba(248,233,233,.5), rgba(255,247,246,0)); }
+    .steps-grid, .sources-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; padding: 0; list-style: none; }
+    .steps-grid li, .sources-grid li { min-height: 190px; padding: 1.4rem; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--paper); box-shadow: var(--soft-shadow); }
+    .steps-grid li { position: relative; overflow: hidden; }
+    .steps-grid li::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: linear-gradient(var(--red-600), var(--wine-800)); }
+    .step-number { display: inline-grid; place-items: center; width: 34px; height: 34px; margin-bottom: 1.2rem; border-radius: 11px; color: var(--wine-800); background: var(--rose-100); font-size: .8rem; font-weight: 850; }
+    .steps-grid li p, .sources-grid li p { margin-top: .45rem; font-size: .93rem; }
+    .sources-grid li { min-height: 172px; }
+    .source-mark { display: inline-grid; place-items: center; width: 39px; height: 39px; margin-bottom: 1rem; border-radius: 12px; color: var(--red-700); background: var(--rose-100); font-size: .82rem; font-weight: 850; letter-spacing: -.04em; }
+
+    .about-section { padding-top: 1rem; padding-bottom: clamp(4rem, 8vw, 7rem); }
+    .about-card { display: grid; grid-template-columns: auto 1fr; align-items: start; gap: 1.1rem; padding: clamp(1.4rem, 4vw, 2.5rem); border: 1px solid rgba(255,255,255,.14); border-radius: var(--radius-lg); color: var(--white); background: linear-gradient(125deg, var(--wine-900), var(--wine-800) 65%, #8d263a); box-shadow: 0 18px 40px rgba(69, 20, 38, .2); }
+    .about-mark { display: grid; place-items: center; width: 47px; height: 47px; border-radius: 15px; color: var(--white); background: rgba(255,255,255,.13); }
+    .about-mark svg { width: 24px; height: 24px; }
+    .about-card h2 { color: var(--white); font-size: clamp(1.4rem, 3vw, 1.9rem); }
+    .about-card p { max-width: 760px; margin-top: .45rem; color: rgba(255,255,255,.79); }
+
+    footer { padding-block: 1.4rem; color: rgba(255,255,255,.84); background: var(--wine-950); text-align: center; font-size: .88rem; }
+    footer span { color: #f0aab1; }
+    :focus-visible { outline: 3px solid #e66b75; outline-offset: 3px; }
+
+    @media (max-width: 760px) {
+      .header-inner { min-height: 70px; }
+      .nav-links { gap: .8rem; }
+      .nav-links a { font-size: .8rem; }
+      .nav-links a:not(.nav-cta) { display: none; }
+      .hero-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-art { min-height: 300px; }
+      .check-card { width: min(84%, 350px); }
+      .floating-seal { right: 8%; }
+      .steps-grid, .sources-grid { grid-template-columns: 1fr; }
+      .steps-grid li, .sources-grid li { min-height: unset; }
+    }
+    @media (max-width: 480px) {
+      .wrap { width: min(100% - 1.5rem, 1120px); }
+      .brand { gap: .55rem; font-size: .88rem; }
+      .brand-mark { width: 38px; height: 38px; border-radius: 12px; }
+      .nav-links .nav-cta { padding: .52rem .8rem; font-size: .78rem; }
+      .hero { padding-block: 3.3rem 3.7rem; }
+      .hero-art { min-height: 275px; }
+      .check-card { padding: 1.25rem; }
+      .assistant-topbar { padding-inline: .2rem; }
+      iframe { min-height: 430px; }
+      .about-card { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
 </head>
 <body>
-<header>
-  <div class="wrap brand">
-    Health Information Checker
-  </div>
-</header>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#top" aria-label="Health Information Checker home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21s-8-4.35-8-11a4.5 4.5 0 0 1 8-2.87A4.5 4.5 0 0 1 20 10c0 6.65-8 11-8 11Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 12h2.3l1.25-2.4 1.7 4.8 1.2-2.4H17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span>Health Information Checker</span>
+      </a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#how-it-works">How it works</a>
+        <a href="#sources">Our sources</a>
+        <a class="nav-cta" href="#checker">Check a claim</a>
+      </nav>
+    </div>
+  </header>
 
-<main class="wrap">
-  <section>
-    <h1>Is this health claim reliable?</h1>
-    <p>Every day we see articles, images and videos claiming that a drink cures a disease or a medicine is dangerous. Ask the assistant before you believe or share.</p>
-  </section>
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">Health information • Student project</p>
+          <h1>Is this health claim <span>reliable?</span></h1>
+          <p class="hero-copy">Every day we see articles, images and videos claiming that a drink cures a disease or a medicine is dangerous. Ask the assistant before you believe or share.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#checker">Check a claim <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M10 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <a class="button button-secondary" href="#how-it-works">How it works</a>
+          </div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="art-halo"></div>
+          <div class="check-card">
+            <div class="check-card-top"><span class="check-card-label">A careful pause</span><span class="dots"><i></i><i></i><i></i></span></div>
+            <div class="check-illustration"><svg viewBox="0 0 40 40" fill="none"><path d="M20 35s-13-7-13-18a7 7 0 0 1 13-4.2A7 7 0 0 1 33 17c0 11-13 18-13 18Z" stroke="currentColor" stroke-width="2.1" stroke-linejoin="round"/><path d="m14.5 20 3.6 3.6 7.5-8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="check-card-title">Check before you share</div>
+            <p class="check-card-note">Take a moment to look at the evidence.</p>
+            <div class="mini-steps"><div class="mini-step"><b>1</b>Claim</div><div class="mini-step"><b>2</b>Evidence</div><div class="mini-step"><b>3</b>Clarity</div></div>
+          </div>
+          <div class="floating-seal"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3 19 6v5.4c0 4.7-3.1 7.9-7 9.6-3.9-1.7-7-4.9-7-9.6V6l7-3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m8.5 11.8 2.2 2.2 4.8-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </div>
+    </section>
 
-  <section class="card">
-    <iframe title="AI assistant chat" src="https://vdk-viber-runtime-prod.bot.botpress.host/edge/?botId=9ff0fe8b-3844-43d6-9743-9b6e29028f56" loading="lazy" allow="clipboard-write"></iframe>
-  </section>
+    <section class="wrap content-section assistant-section" id="checker">
+      <div class="section-heading">
+        <p class="eyebrow">Start here</p>
+        <h2>Ask the assistant</h2>
+        <p>Share a health claim to review the evidence and understand what is known.</p>
+      </div>
+      <div class="assistant-panel">
+        <div class="assistant-topbar">
+          <span class="assistant-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.8A2.8 2.8 0 0 1 6.8 3h10.4A2.8 2.8 0 0 1 20 5.8v7.4a2.8 2.8 0 0 1-2.8 2.8h-5.5L7 20v-4H6.8A2.8 2.8 0 0 1 4 13.2V5.8Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8 8h8M8 11.5h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+          <div><div class="assistant-name">Health Information Checker</div><div class="assistant-status">Assistant chat</div></div>
+        </div>
+        <iframe title="AI assistant chat" src="https://vdk-viber-runtime-prod.bot.botpress.host/edge/?botId=9ff0fe8b-3844-43d6-9743-9b6e29028f56" loading="lazy" allow="clipboard-write"></iframe>
+      </div>
+    </section>
 
-  <section>
-    <h2>How does it work?</h2>
-    <ol>
-      <li><h3>Enter the claim</h3><p>Type the text or paste the link.</p></li>
-      <li><h3>Review the evidence</h3><p>The idea is compared with well-known health sources.</p></li>
-      <li><h3>Read a simple explanation</h3><p>An easy summary of what is known and what is uncertain.</p></li>
-    </ol>
-  </section>
+    <section class="content-section steps-section" id="how-it-works">
+      <div class="wrap">
+        <div class="section-heading">
+          <p class="eyebrow">A simple process</p>
+          <h2>How does it work?</h2>
+        </div>
+        <ol class="steps-grid">
+          <li><span class="step-number">01</span><h3>Enter the claim</h3><p>Type the text or paste the link.</p></li>
+          <li><span class="step-number">02</span><h3>Review the evidence</h3><p>The idea is compared with well-known health sources.</p></li>
+          <li><span class="step-number">03</span><h3>Read a simple explanation</h3><p>An easy summary of what is known and what is uncertain.</p></li>
+        </ol>
+      </div>
+    </section>
 
-  <section>
-    <h2>Our sources</h2>
-    <ul>
-      <li><h3>World Health Organization (WHO)</h3><p>Public health.</p></li>
-      <li><h3>UNICEF</h3><p>Child and family health.</p></li>
-      <li><h3>U.S. Food and Drug Administration (FDA)</h3><p>Medicines and food.</p></li>
-    </ul>
-  </section>
+    <section class="wrap content-section" id="sources">
+      <div class="section-heading">
+        <p class="eyebrow">Trusted references</p>
+        <h2>Our sources</h2>
+      </div>
+      <ul class="sources-grid">
+        <li><span class="source-mark" aria-hidden="true">WHO</span><h3>World Health Organization (WHO)</h3><p>Public health.</p></li>
+        <li><span class="source-mark" aria-hidden="true">UN</span><h3>UNICEF</h3><p>Child and family health.</p></li>
+        <li><span class="source-mark" aria-hidden="true">FDA</span><h3>U.S. Food and Drug Administration (FDA)</h3><p>Medicines and food.</p></li>
+      </ul>
+    </section>
 
-  <section>
-    <h2>About the project</h2>
-    <p>A student project by the Disciplining The AI team, helping people pause before believing or sharing any health claim.</p>
-  </section>
-</main>
+    <section class="wrap about-section" id="about">
+      <div class="about-card">
+        <span class="about-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-8-4.35-8-11a4.5 4.5 0 0 1 8-2.87A4.5 4.5 0 0 1 20 10c0 6.65-8 11-8 11Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 12h2.3l1.25-2.4 1.7 4.8 1.2-2.4H17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div><h2>About the project</h2><p>A student project by the Disciplining The AI team, helping people pause before believing or sharing any health claim.</p></div>
+      </div>
+    </section>
+  </main>
 
-<footer>Experimental student project — Disciplining The AI</footer>
-
+  <footer><div class="wrap">Experimental student project <span>—</span> Disciplining The AI</div></footer>
 </body>
 </html>
